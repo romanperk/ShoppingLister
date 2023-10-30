@@ -1,10 +1,10 @@
 "use strict";
-const ListerMainUseCaseError = require("./lister-main-use-case-error.js");
+const UnicornMainUseCaseError = require("./unicorn-main-use-case-error.js");
 
 const Init = {
-  UC_CODE: `${ListerMainUseCaseError.ERROR_PREFIX}init/`,
+  UC_CODE: `${UnicornMainUseCaseError.ERROR_PREFIX}init/`,
 
-  InvalidDtoIn: class extends ListerMainUseCaseError {
+  InvalidDtoIn: class extends UnicornMainUseCaseError {
     constructor() {
       super(...arguments);
       this.code = `${Init.UC_CODE}invalidDtoIn`;
@@ -12,7 +12,7 @@ const Init = {
     }
   },
 
-  SchemaDaoCreateSchemaFailed: class extends ListerMainUseCaseError {
+  SchemaDaoCreateSchemaFailed: class extends UnicornMainUseCaseError {
     constructor() {
       super(...arguments);
       this.status = 500;
@@ -21,7 +21,7 @@ const Init = {
     }
   },
 
-  SetProfileFailed: class extends ListerMainUseCaseError {
+  SetProfileFailed: class extends UnicornMainUseCaseError {
     constructor() {
       super(...arguments);
       this.code = `${Init.UC_CODE}sys/setProfileFailed`;
@@ -29,7 +29,7 @@ const Init = {
     }
   },
 
-  CreateAwscFailed: class extends ListerMainUseCaseError {
+  CreateAwscFailed: class extends UnicornMainUseCaseError {
     constructor() {
       super(...arguments);
       this.code = `${Init.UC_CODE}createAwscFailed`;

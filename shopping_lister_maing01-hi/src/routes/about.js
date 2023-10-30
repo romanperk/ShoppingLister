@@ -147,7 +147,7 @@ let About = createVisualComponent({
             <DynamicLibraryComponent uu5Tag="UuProductCatalogue.Bricks.ProductList" type="16x9" products={products} />
           ) : null}
           <div className={Css.common()}>
-            <div>{`shoppingLister ${Environment.appVersion}`}</div>
+            <div>{`Shopping Lister ${Environment.appVersion}`}</div>
             {license.termsOfUse && (
               <div>
                 <Uu5Elements.Link href={license.termsOfUse} target="_blank">

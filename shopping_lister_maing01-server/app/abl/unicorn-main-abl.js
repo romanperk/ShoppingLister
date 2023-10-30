@@ -6,7 +6,7 @@ const { Profile, AppClientTokenService, UuAppWorkspace, UuAppWorkspaceError } = 
 const { UriBuilder } = require("uu_appg01_server").Uri;
 const { LoggerFactory } = require("uu_appg01_server").Logging;
 const { AppClient } = require("uu_appg01_server");
-const Errors = require("../api/errors/lister-main-error.js");
+const Errors = require("../api/errors/unicorn-main-error.js");
 
 const WARNINGS = {
   initUnsupportedKeys: {
@@ -14,9 +14,9 @@ const WARNINGS = {
   },
 };
 
-const logger = LoggerFactory.get("ListerMainAbl");
+const logger = LoggerFactory.get("UnicornMainAbl");
 
-class ListerMainAbl {
+class UnicornMainAbl {
   constructor() {
     this.validator = Validator.load();
   }
@@ -34,7 +34,7 @@ class ListerMainAbl {
     );
 
     // HDS 2
-    const schemas = ["listerMain"];
+    const schemas = ["unicornMain"];
     let schemaCreateResults = schemas.map(async (schema) => {
       try {
         return await DaoFactory.getDao(schema).createSchema();
@@ -52,8 +52,8 @@ class ListerMainAbl {
       const uuBtBaseUri = uuBtUriBuilder.toUri().getBaseUri();
 
       const createAwscDtoIn = {
-        name: "ShoppingLister",
-        typeCode: "shopping-lister-maing01",
+        name: "UuUnicorn",
+        typeCode: "uu-unicorn-maing01",
         location: location,
         uuAppWorkspaceUri: baseUri,
       };
@@ -149,4 +149,4 @@ class ListerMainAbl {
   }
 }
 
-module.exports = new ListerMainAbl();
+module.exports = new UnicornMainAbl();

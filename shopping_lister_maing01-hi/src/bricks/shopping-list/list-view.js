@@ -1,9 +1,37 @@
 //@@viewOn:imports
 import { createVisualComponent, PropTypes, Utils } from "uu5g05";
 import { useAlertBus } from "uu5g05-elements";
-import Item from "./item";
+import Tile from "./item-tile";
+import ItemResolvedTile from "./item-resolved-tile";
 import Config from "./config/config.js";
 //@@viewOff:imports
+
+//@@viewOn:css
+const Css = {
+  // ... (your existing styles)
+
+  listViewContainer: () =>
+    Config.Css.css({
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+    }),
+
+  listViewTile: () =>
+    Config.Css.css({
+      width: 800,
+      margin: "24px",
+      "@media (max-width: 1000px)": {
+        width: 550, // Adjust as needed for smaller screens
+      },
+      "@media (max-width: 768px)": {
+        width: 400, // Adjust as needed for smaller screens
+      },
+      // Add more media queries for different screen sizes if necessary
+    }),
+};
+
+//@@viewOff:css
 
 const ListView = createVisualComponent({
   //@@viewOn:statics
@@ -11,16 +39,12 @@ const ListView = createVisualComponent({
   //@@viewOff:statics
 
   //@@viewOn:propTypes
-  propTypes: {
-    itemList: PropTypes.array.isRequired,
-    onUpdate: PropTypes.func,
-    onDelete: PropTypes.func,
-  },
+  propTypes: {},
   //@@viewOff:propTypes
 
   //@@viewOn:defaultProps
   defaultProps: {
-    itemList: [],
+    shoppingList: [],
     onUpdate: () => {},
     onDelete: () => {},
   },
@@ -39,27 +63,34 @@ const ListView = createVisualComponent({
     }
 
     function handleDelete(event) {
-      const item = event.data;
+      const list = event.data;
 
       try {
-        props.onDelete(item);
+        props.onDelete(list);
         addAlert({
-          message: `The item ${item.name} has been deleted.`,
+          message: `Položka ${list.name} byla smazána.`,
           priority: "success",
           durationMs: 2000,
         });
       } catch (error) {
-        ListView.logger.error("Error deleting item", error);
-        showError(error, "item delete failed!");
+        ListView.logger.error("Chyba během mázání položky", error);
+        showError(error, "Smazání položky selhalo!");
       }
     }
 
     function handleUpdate(event) {
+      const id = event.data;
+
       try {
-        props.onUpdate(event.data);
+        props.onUpdate(id.id);
+        addAlert({
+          message: `Položka ${id.name} byla označena za vyřešenou.`,
+          priority: "success",
+          durationMs: 2000,
+        });
       } catch (error) {
-        ListView.logger.error("Error updating item", error);
-        showError(error, "Item update failed!");
+        ListView.logger.error("Chyba během označení položky za vyřešenou", error);
+        showError(error, "Označení položky za vyřešenou selhalo!");
       }
     }
     //@@viewOff:private
@@ -69,15 +100,19 @@ const ListView = createVisualComponent({
 
     return (
       <div {...attrs}>
-        {props.itemList.map((item) => (
-          <Item
-            key={item.id}
-            item={item}
-            onDelete={handleDelete}
-            onUpdate={handleUpdate}
-            style={{ width: 640, margin: "24px auto" }}
-          />
-        ))}
+        {props.showResolved
+          ? props.shoppingList.resolvedItems.map((item) => (
+              <ItemResolvedTile key={item.id} item={item} className={Css.listViewTile()} />
+            ))
+          : props.shoppingList.itemList.map((item) => (
+              <Tile
+                key={item.id}
+                item={item}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
+                className={Css.listViewTile()}
+              />
+            ))}
       </div>
     );
     //@@viewOff:render

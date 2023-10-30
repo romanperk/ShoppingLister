@@ -4,8 +4,11 @@
       "type": "uuAppObjectStore",
       "realization": "MongoDB",
       "schemaMap": {
-        "listerMain": {
-          "realization": "dao/ListerMainMongo"
+        "unicornMain": {
+          "realization": "dao/UnicornMainMongo"
+        },
+        "joke": {
+          "realization": "dao/JokeMongo"
         }
       }
     }

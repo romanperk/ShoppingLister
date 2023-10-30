@@ -1,5 +1,5 @@
 {
-  "product": "shopping_lister_maing01",
+  "product": "uu_unicorn_maing01",
   "version": "0.1.0",
   "license": "License Commercial",
   "description": {
@@ -12,6 +12,6 @@
       "appDeploymentUri": null
     }
   },
-  "shopping_lister_maing01-hi": {},
-  "shopping_lister_maing01-server": {}
+  "uu_unicorn_maing01-hi": {},
+  "uu_unicorn_maing01-server": {}
 }

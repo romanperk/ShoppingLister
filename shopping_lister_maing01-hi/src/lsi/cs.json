@@ -1,7 +1,7 @@
 {
-  "appName": "Aplikace shoppingLister",
+  "appName": "Aplikace Shopping Lister",
   "About": {
-    "header": "O aplikaci shoppingLister",
+    "header": "O aplikaci Shopping Lister",
     "creatorsHeader": "Tvůrci aplikace",
     "termsOfUse": "Podmínky užívání"
   },
@@ -32,6 +32,6 @@
   "Menu": {
     "home": "Vítejte",
     "about": "O aplikaci",
-    "shoppingListDetail": "Detail nákupního seznamu"
+    "shoppingListDetail": "Detail nákupní seznamu"
   }
 }

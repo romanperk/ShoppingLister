@@ -2,17 +2,17 @@
   "{vendor}-{uuApp}-{uuSubApp}": {
     "useCaseMap": {
       "sys/uuAppWorkspace/init": {
-        "realization": "api/controllers/ListerMainController.init",
+        "realization": "api/controllers/UnicornMainController.init",
         "httpMethod": "POST",
         "type": "CMD"
       },
       "sys/uuAppWorkspace/load": {
-        "realization": "api/controllers/ListerMainController.load",
+        "realization": "api/controllers/UnicornMainController.load",
         "httpMethod": "GET",
         "type": "CMD"
       },
       "sys/uuAppWorkspace/loadBasicData": {
-        "realization": "api/controllers/ListerMainController.loadBasicData",
+        "realization": "api/controllers/UnicornMainController.loadBasicData",
         "httpMethod": "GET",
         "type": "CMD"
       },
@@ -25,6 +25,16 @@
         "realization": "index.html",
         "httpMethod": "GET",
         "type": "UVE"
+      },
+      "helloWorld": {
+        "realization": "api/controllers/JokeController.helloWorld",
+        "httpMethod": "GET",
+        "type": "CMD"
+      },
+      "joke/create": {
+        "realization": "api/controllers/JokeController.create",
+        "httpMethod": "POST",
+        "type": "CMD"
       }
     }
   }

@@ -1,7 +1,7 @@
 "use strict";
 const { UuObjectDao } = require("uu_appg01_server").ObjectStore;
 
-class ListerMainMongo extends UuObjectDao {
+class UnicornMainMongo extends UuObjectDao {
   async createSchema() {
     await super.createIndex({ awid: 1 }, { unique: true });
   }
@@ -35,4 +35,4 @@ class ListerMainMongo extends UuObjectDao {
   }
 }
 
-module.exports = ListerMainMongo;
+module.exports = UnicornMainMongo;

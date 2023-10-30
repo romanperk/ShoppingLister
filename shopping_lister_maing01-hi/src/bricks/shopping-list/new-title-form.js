@@ -1,12 +1,12 @@
 //@@viewOn:imports
 import { createVisualComponent, PropTypes, Utils } from "uu5g05";
 import { Form, FormText, SubmitButton, CancelButton } from "uu5g05-forms";
-import Config from "../config/config.js";
+import Config from "./config/config.js";
 //@@viewOff:imports
 
-const CreateItem = createVisualComponent({
+const NewTitleForm = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "CreateItem",
+  uu5Tag: Config.TAG + "NewTitleForm",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -29,10 +29,10 @@ const CreateItem = createVisualComponent({
 
     return (
       <Form {...elementProps} onSubmit={props.onSubmit}>
-        <FormText name="name" label="Název položky" required />
+        <FormText name="name" label="Přejmenovat nákupní seznam" required />
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", paddingTop: 8 }}>
           <CancelButton onClick={props.onCancel}>Zrušit</CancelButton>
-          <SubmitButton>Přidej položku</SubmitButton>
+          <SubmitButton>Přejmenovat</SubmitButton>
         </div>
       </Form>
     );
@@ -41,6 +41,6 @@ const CreateItem = createVisualComponent({
 });
 
 //@@viewOn:exports
-export { CreateItem };
-export default CreateItem;
+export { NewTitleForm };
+export default NewTitleForm;
 //@@viewOff:exports

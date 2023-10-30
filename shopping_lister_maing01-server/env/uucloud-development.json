@@ -2,9 +2,9 @@
   "schemaVersion": "1.0.0",
   "schemaSpecificationUri": "https://uuapp.plus4u.net/uu-bookkit-maing01/bef682626ed943f28cde360ccb325981/book/page?code=uuSubAppInstanceDescriptor",
   "uuSubApp": {
-    "code": "SHOPPING.LISTER.MAING01",
+    "code": "UU.UNICORN.MAING01",
     "version": "0.1.0",
-    "name": "shoppingListerMaing01",
+    "name": "uuUnicornMaing01",
     "description": "",
     "license": "License Commercial",
     "asidRequired": true,
@@ -32,7 +32,7 @@
     "uuConfigMap": {
       "uu_app_secretstore_enable_encryption": true,
       "uu_app_secretstore_master_key_active_slot": "slot1",
-      "uu_app_secretstore_master_key1_slot1": "V~NXO!Oe_0Dyf;A#w&&8.vzlmd3nfS2bzq1jmya5}O)nejTTG@PP<v(|)]BZ_FYl",
+      "uu_app_secretstore_master_key1_slot1": ":pulK#IT:)1tzc-P/,Y8^ONY9%2]r=Oybpf,86Rj-CW_IwzUyJ?r]T:Z8[3#Yi35",
       "asid_license_owner_list": ["0-0"],
       "uu_app_oidc_providers_oidcg02_uri": "https://uuapp-dev.plus4u.net/uu-oidc-maing02/eca71064ecce44b0a25ce940eb8f053d/oidc",
       "uu5g05_libraryRegistryBaseUri": "https://uuapp-dev.plus4u.net/uu-applibraryregistry-maing01/000008ad5570455e83857a394f9a21c9",
