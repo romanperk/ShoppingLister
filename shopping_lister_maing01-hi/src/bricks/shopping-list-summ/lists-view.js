@@ -1,41 +1,34 @@
 //@@viewOn:imports
-import { createVisualComponent, PropTypes, Utils } from "uu5g05";
-import { useAlertBus } from "uu5g05-elements";
-import ListTile from "./list-tile";
-import ListArchivedTile from "./list-archived-tile";
+import { Utils, createVisualComponent, useState } from "uu5g05";
+import Uu5Tiles from "uu5tilesg02";
+import Uu5TilesControls from "uu5tilesg02-controls";
+import Uu5TilesElements from "uu5tilesg02-elements";
+import Tile from "./list-tile.js";
+import ModalOnButton from "./new-list-modal.js";
 import Config from "./config/config.js";
+import { useJokes } from "../list-context.js";
+import { useAlertBus, Button } from "uu5g05-elements";
 //@@viewOff:imports
 
+//@@viewOn:constants
+const SORTER_LIST = [
+  {
+    key: "listName",
+    label: "Název",
+    sort: (a, b) => a.listName.localeCompare(b.listName),
+  },
+];
+//@@viewOff:constants
+
 //@@viewOn:css
-const Css = {
-  // ... (your existing styles)
-
-  listViewContainer: () =>
-    Config.Css.css({
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center",
-    }),
-
-  listViewTile: () =>
-    Config.Css.css({
-      width: 800,
-      margin: "24px",
-      "@media (max-width: 1000px)": {
-        width: 550, // Adjust as needed for smaller screens
-      },
-      "@media (max-width: 768px)": {
-        width: 400, // Adjust as needed for smaller screens
-      },
-      // Add more media queries for different screen sizes if necessary
-    }),
-};
-
 //@@viewOff:css
 
-const ListsView = createVisualComponent({
+//@@viewOn:helpers
+//@@viewOff:helpers
+
+let ListsView = createVisualComponent({
   //@@viewOn:statics
-  uu5Tag: Config.TAG + "ListView",
+  uu5Tag: Config.TAG + "ListsView",
   //@@viewOff:statics
 
   //@@viewOn:propTypes
@@ -43,16 +36,31 @@ const ListsView = createVisualComponent({
   //@@viewOff:propTypes
 
   //@@viewOn:defaultProps
-  defaultProps: {
-    shoppingLists: [],
-    onArchive: () => {},
-    onDelete: () => {},
-  },
+  defaultProps: {},
   //@@viewOff:defaultProps
 
   render(props) {
     //@@viewOn:private
+    const [filterList, setFilterList] = useState([]);
+    const [sorterList, setSorterList] = useState([]);
+    const [modalProps, setModalProps] = useState();
+    const { currentListId, selectList, getArchivedLists, getActiveLists } = useJokes();
     const { addAlert } = useAlertBus();
+    const activeList = getActiveLists();
+    const archivedList = getArchivedLists();
+    const [showArchived, setShowArchived] = useState(false);
+
+    function onSorterChange(e) {
+      setSorterList(e.data.sorterList);
+    }
+
+    function ArchivedButton(props) {
+      return (
+        <Button {...props}>
+          {showArchived ? "Zobrazit aktivní seznamy" : "Zobrazit archivované seznamy"}
+        </Button>
+      );
+    }
 
     function showError(error, header = "") {
       addAlert({
@@ -63,50 +71,71 @@ const ListsView = createVisualComponent({
     }
 
     function handleDelete(event) {
-      const list = event.data;
-
+      const list = event.data.id;
       try {
         props.onDelete(list);
         addAlert({
-          message: `Položka ${list.name} byla smazána.`,
+          message: `The list ${event.data.listName} has been deleted.`,
           priority: "success",
           durationMs: 2000,
         });
       } catch (error) {
-        ListView.logger.error("Chyba během mázání položky", error);
-        showError(error, "Smazání položky selhalo!");
+        ListsView.logger.error("Error deleting list", error);
+        showError(error, "List delete failed!");
       }
     }
-
-    function handleArchive(event) {
-      const id = event.data;
-
+    
+    function handleUpdate(event) {
+      const list = event.data;
       try {
-        props.onArchive(id.id);
+        props.onUpdate(list.id);
         addAlert({
-          message: `Položka ${id.name} byla označena za vyřešenou.`,
+          message: `The list ${list.listName} has been archived.`,
           priority: "success",
           durationMs: 2000,
         });
       } catch (error) {
-        ListView.logger.error("Chyba během označení položky za vyřešenou", error);
-        showError(error, "Označení položky za vyřešenou selhalo!");
+        ListView.logger.error("Error archiving list", error);
+        showError(error, "List archive failed!");
       }
     }
     //@@viewOff:private
 
-    //@@viewOn:render
-    const attrs = Utils.VisualComponent.getAttrs(props);
+    //@@viewOn:interface
+    //@@viewOff:interface
 
+    //@@viewOn:render
+    const listsToDisplay = showArchived ? archivedList : activeList;
+    const attrs = Utils.VisualComponent.getAttrs(props);
+    const { remove, update, create } = useJokes();
     return (
       <div {...attrs}>
-              <ListTile
-                key={list.id}
-                list={list}
-                onDelete={handleDelete}
-                onArchive={handleArchive}
-                className={Css.listViewTile()}
-              />
+        <div className={Config.Css.css({ padding: "16px 32px" })}>
+        <ArchivedButton onClick={() => setShowArchived(!showArchived)} />
+        {listsToDisplay.map((list) => (
+          <Uu5Tiles.ControllerProvider
+            key={list.id}
+            list={list}
+            selectList={selectList}
+            onUpdate={handleUpdate}
+            selected={list.id === currentListId}
+            onDelete={handleDelete}
+            isArchived={showArchived}
+            sorterDefinitionList={SORTER_LIST}
+            sorterList={sorterList}
+            onSorterChange={onSorterChange}
+          >
+            <ModalOnButton header="Vytvořit seznam" />
+            <Uu5TilesControls.SorterButton />
+            <Uu5TilesControls.SearchButton />
+            <Uu5TilesControls.SorterBar />
+            <Uu5TilesControls.Counter />
+            <Uu5TilesElements.Grid tileMinWidth={100} tileMaxWidth={200} onDelete={remove} onUpdate={update}>
+              {Tile}
+            </Uu5TilesElements.Grid>
+          </Uu5Tiles.ControllerProvider>
+           ))}
+        </div>
       </div>
     );
     //@@viewOff:render

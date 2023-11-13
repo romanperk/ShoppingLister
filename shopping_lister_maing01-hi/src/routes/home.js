@@ -1,8 +1,8 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent, useState } from "uu5g05";
+import { Utils, createVisualComponent, Content } from "uu5g05";
 import { withRoute } from "uu_plus4u5g02-app";
-
-import ListsProvider from "../bricks/shopping-list-summ/lists-provider.js";
+import { useJokes } from "../bricks/list-context.js";
+import ListsView from "../bricks/shopping-list-summ/lists-view.js";
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
 
@@ -30,22 +30,22 @@ let Home = createVisualComponent({
   defaultProps: {},
   //@@viewOff:defaultProps
 
-  render(props) {
+  render() {
     //@@viewOn:private
+    const { remove, update, create } = useJokes();
     //@@viewOff:private
 
     //@@viewOn:interface
     //@@viewOff:interface
 
     //@@viewOn:render
-    const attrs = Utils.VisualComponent.getAttrs(props);
     return (
-      <div {...attrs}>
+      <div>
         <RouteBar />
         <div style={{ textAlign: 'center' }}>
           <h1>Přehled nákupních seznamů</h1>
         </div>
-        <ListsProvider />
+        <ListsView onDelete={remove} onUpdate={update} onCreate={create} />
       </div>
     );
     //@@viewOff:render
