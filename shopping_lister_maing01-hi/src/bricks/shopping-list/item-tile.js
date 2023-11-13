@@ -17,8 +17,8 @@ const Css = {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      paddingLeft: 16,
-      paddingRight: 8,
+      paddingLeft: 15,
+      paddingRight: 15,
     }),
 };
 //@@viewOff:css

@@ -1,15 +1,15 @@
 //@@viewOn:imports
 import { createVisualComponent } from "uu5g05";
-import { Button } from "uu5g05-elements";
 import { withRoute } from "uu_plus4u5g02-app";
+import { Button } from "uu5g05-elements";
 import Config from "./config/config.js";
 import RouteBar from "../core/route-bar.js";
-import ListProvider from "../bricks/shopping-list/list-provider.js";
 import ListView from "../bricks/shopping-list/list-view.js";
-import CreateView from "../bricks/shopping-list/create-item-view.js";
+import CreateItemView from "../bricks/shopping-list/create-item-view.js";
 import AddUserView from "../bricks/shopping-list/add-user-view.js";
 import NewTitleView from "../bricks/shopping-list/new-title-view.js";
 import UserListView from "../bricks/shopping-list/user-list-view.js";
+import { useJokes } from "../bricks/list-context.js";
 //@@viewOff:imports
 
 //@@viewOn:constants
@@ -62,49 +62,59 @@ let List = createVisualComponent({
   //@@viewOff:statics
 
   render() {
+    const {
+      lists,
+      currentListId,
+      createUser,
+      selectList,
+      create,
+      update,
+      remove,
+      createItem,
+      updateItem,
+      removeItem,
+      changeListName,
+      removeUser,
+      showResolved,
+      setShowResolved,
+      getSelectedListWithUnresolvedItems,
+      getSelectedListWithResolvedItems,
+      isUserOwner,
+    } = useJokes();
+    const unresolvedItemsList = getSelectedListWithUnresolvedItems();
+    const resolvedItemsList = getSelectedListWithResolvedItems();
+     const isOwner = isUserOwner(currentListId); 
+    const currentList = lists.find((list) => list.id === currentListId) || {};
     //@@viewOn:render
     return (
       <>
         <RouteBar />
-        <ListProvider>
-          {({
-            shoppingList,
-            remove,
-            update,
-            create,
-            removeUser,
-            createUser,
-            showResolved,
-            setShowResolved,
-            resolvedItems,
-            changeListName,
-          }) => (
-            <div className={Css.screen()}>
-              <div className={Css.userListContainer()}>
-                <h1>Seznam uživatelů</h1>
-                <AddUserView onCreate={createUser} style={{ maxWidth: 400, display: "block" }} />
-                <UserListView shoppingList={shoppingList} onDelete={removeUser} />
-              </div>
-              <div className={Css.icon()}>
-                <h1> {shoppingList.listName}</h1>
-                <div className={Css.ListButtons()}>
-                  <NewTitleView changeListName={changeListName} style={{ maxWidth: 400, display: "block" }} />
-                  <CreateView onCreate={create} style={{ maxWidth: 400, display: "block" }} />
-                  <Button onClick={() => setShowResolved(!showResolved)}>
-                    {showResolved ? "Nevyřešené" : "Vyřešené"}
-                  </Button>
-                </div>
-                <ListView
-                  shoppingList={shoppingList}
-                  showResolved={showResolved}
-                  resolvedItems={resolvedItems}
-                  onDelete={remove}
-                  onUpdate={update}
-                />
-              </div>
+        <div className={Css.screen()}>
+          <div className={Css.userListContainer()}>
+            <h1>USER LIST</h1>
+            {isOwner && <AddUserView onCreate={createUser} style={{ maxWidth: 400, display: "block" }} />}
+            <UserListView shoppingList={currentList} onDelete={removeUser} />
+          </div>
+          <div className={Css.icon()}>
+            <h1>{currentList.listName}</h1>
+            <div className={Css.ListButtons()}>
+              <NewTitleView changeListName={changeListName} style={{ maxWidth: 400, display: "block" }} />
+              <CreateItemView currentID={currentListId} onCreate={createItem} style={{ maxWidth: 400, display: "block" }} />
+              <Button onClick={() => setShowResolved(!showResolved)}>
+                {showResolved ? "Show Unresolved" : "Show Resolved"}
+              </Button>
             </div>
-          )}
-        </ListProvider>
+            <ListView
+              id={currentListId}
+              shoppingList={unresolvedItemsList || {}}
+              showResolved={showResolved}
+              resolvedItems={resolvedItemsList || []}
+              onDelete={removeItem}
+              onUpdate={updateItem}
+              
+            />
+          </div>
+        </div>
       </>
     );
     //@@viewOff:render

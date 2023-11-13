@@ -1,14 +1,12 @@
+"use strict";
 const { Validator } = require("uu_appg01_server").Validation;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
-const { DaoFactory, ObjectStoreError } = require("uu_appg01_server").ObjectStore;
+const { DaoFactory } = require("uu_appg01_server").ObjectStore;
 
 const Errors = require("../api/errors/joke-error.js");
+const Warnings = require("../api/warnings/joke-warning.js");
 
-const WARNINGS = {
-  createUnsupportedKeys: {
-    code: `${Errors.Create.UC_CODE}unsupportedKeys`,
-  },
-};
+const FISHY_WORDS = ["barracuda", "broccoli", "Topolánek"];
 
 class JokeAbl {
   constructor() {
@@ -16,33 +14,45 @@ class JokeAbl {
     this.dao = DaoFactory.getDao("joke");
   }
 
-  async create(awid, dToIn) {
-    let validationResult = this.validator.validate("jokeCreateDtoInType", dToIn);
-    let uuAppErrorMap = ValidationHelper.processValidationResult(
-      dToIn,
+  async create(awid, dtoIn, session, authorizationResult) {
+    let uuAppErrorMap = {};
+
+    // validation of dtoIn
+    const validationResult = this.validator.validate("jokeCreateDtoInType", dtoIn);
+    uuAppErrorMap = ValidationHelper.processValidationResult(
+      dtoIn,
       validationResult,
-      WARNINGS.createUnsupportedKeys.code,
-      Errors.Create.invalidDtoIn
+      uuAppErrorMap,
+      Warnings.Create.UnsupportedKeys.code,
+      Errors.Create.InvalidDtoIn
     );
 
-    dToIn.awid = awid;
-    let dtoOut;
-    try {
-      dtoOut = await this.dao.create(dToIn);
-    } catch (e) {
-      if (e instanceof ObjectStoreError) {
-        throw new Errors.Create.JokeDaoCreateFailed({ uuAppErrorMap }, e);
+    // check for fishy words
+    FISHY_WORDS.forEach((word) => {
+      if (dtoIn.text.includes(word)) {
+        throw new Errors.Create.TextContainsFishyWords({ uuAppErrorMap }, { text: dtoIn.text, fishyWord: word });
       }
-      throw e;
-    }
-    dtoOut.uuAppErrorMap = uuAppErrorMap;
+    });
+    const EXECUTIVES_PROFILE = "Executives";
+    // set visibility
+    const visibility = authorizationResult.getAuthorizedProfiles().includes(EXECUTIVES_PROFILE);
 
-    // let dtoOut = {
-    //     ...dToIn,
-    //     awid,
-    //     uuAppErrorMap
-    // }
+    // get uuIdentity information
+    const uuIdentity = session.getIdentity().getUuIdentity();
+    const uuIdentityName = session.getIdentity().getName();
 
+    // save joke to uuObjectStore
+    const uuObject = {
+      ...dtoIn,
+      awid,
+      visibility,
+      uuIdentity,
+      uuIdentityName,
+    };
+    const joke = await this.dao.create(uuObject);
+
+    // prepare and return dtoOut
+    const dtoOut = { ...joke, uuAppErrorMap };
     return dtoOut;
   }
 }
