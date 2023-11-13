@@ -14,9 +14,9 @@ const Css = {
       alignItems: "center",
       justifyContent: "space-between",
       height: 25,
-      marginTop: 5,
-      paddingLeft: 16,
-      paddingRight: 8,
+      marginTop: 20,
+      paddingLeft: 30,
+      paddingRight: 0,
     })
 }
 //@@viewOff:css
@@ -50,10 +50,10 @@ const Tile = createVisualComponent({
             <>
               <div
                 className={Config.Css.css({
-                  paddingTop: padding.top,
-                  paddingRight: padding.right,
-                  paddingBottom: padding.bottom,
-                  paddingLeft: padding.left,
+                  paddingTop: 25,
+                  paddingRight: 25,
+                  paddingBottom: 25,
+                  paddingLeft: 25,
                 })}
               >
                 <div>

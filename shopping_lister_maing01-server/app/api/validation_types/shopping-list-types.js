@@ -35,7 +35,6 @@ const archivedShoppingListsListDtoInType = shape({});
 const shoppingListItemCreateDtoInType = shape({
   listId: id().isRequired(),
   itemName: string(1, 255).isRequired(),
-  quantity: number().isRequired(),
 });
 
 // Remove an Item from the Shopping List (DELETE)
@@ -75,10 +74,5 @@ const authorizedUserDeleteDtoInType = shape({
 // Delete Self from Authorized Users (DELETE)
 const selfDeleteFromAuthorizedUsersDtoInType = shape({
   listId: id().isRequired(),
-});
-
-// Joke creation DTO (Example provided)
-const jokeCreateDtoInType = shape({
-  name: string(1, 255).isRequired(),
-  text: string(1, 4000).isRequired(),
+  userId: id().isRequired(),
 });

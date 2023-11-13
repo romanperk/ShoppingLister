@@ -83,7 +83,7 @@ let List = createVisualComponent({
     } = useJokes();
     const unresolvedItemsList = getSelectedListWithUnresolvedItems();
     const resolvedItemsList = getSelectedListWithResolvedItems();
-     const isOwner = isUserOwner(currentListId); 
+    const isOwner = isUserOwner(currentListId); 
     const currentList = lists.find((list) => list.id === currentListId) || {};
     //@@viewOn:render
     return (
@@ -91,7 +91,7 @@ let List = createVisualComponent({
         <RouteBar />
         <div className={Css.screen()}>
           <div className={Css.userListContainer()}>
-            <h1>USER LIST</h1>
+            <h1>Seznam uživatelů</h1>
             {isOwner && <AddUserView onCreate={createUser} style={{ maxWidth: 400, display: "block" }} />}
             <UserListView shoppingList={currentList} onDelete={removeUser} />
           </div>
@@ -101,7 +101,7 @@ let List = createVisualComponent({
               <NewTitleView changeListName={changeListName} style={{ maxWidth: 400, display: "block" }} />
               <CreateItemView currentID={currentListId} onCreate={createItem} style={{ maxWidth: 400, display: "block" }} />
               <Button onClick={() => setShowResolved(!showResolved)}>
-                {showResolved ? "Show Unresolved" : "Show Resolved"}
+                {showResolved ? "Zobrazit nevyřešené" : "Zobrazit vyřešené"}
               </Button>
             </div>
             <ListView

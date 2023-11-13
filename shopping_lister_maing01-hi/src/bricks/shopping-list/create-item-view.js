@@ -45,17 +45,15 @@ const CreateItemView = createVisualComponent({
     const [mode, setMode] = useState(Mode.BUTTON);
 
     function handleSubmit(event) {
-      let item;
-
       try {
-        item = props.onCreate(event.data.value);
+        props.onCreate(props.currentID, event.data.value);
       } catch (error) {
         // We pass Error.Message instance to the Uu5Forms.Form that shows alert
         throw new Utils.Error.Message("Přídání položky selhalo!", error);
       }
 
       addAlert({
-        message: `Položka ${item.name} byla přidána.`,
+        message: `Položka ${event.data.value.name} byla přidána.`,
         priority: "success",
         durationMs: 2000,
       });

@@ -63,10 +63,10 @@ const ListView = createVisualComponent({
     }
 
     function handleDelete(event) {
-      const list = event.data;
+      const item = event.data;
 
       try {
-        props.onDelete(list);
+        props.onDelete(props.id, item.id);
         addAlert({
           message: `Položka ${list.name} byla smazána.`,
           priority: "success",
@@ -82,7 +82,7 @@ const ListView = createVisualComponent({
       const id = event.data;
 
       try {
-        props.onUpdate(id.id);
+        props.onUpdate(props.id, id.id);
         addAlert({
           message: `Položka ${id.name} byla označena za vyřešenou.`,
           priority: "success",
@@ -101,10 +101,10 @@ const ListView = createVisualComponent({
     return (
       <div {...attrs}>
         {props.showResolved
-          ? props.shoppingList.resolvedItems.map((item) => (
-              <ItemResolvedTile key={item.id} item={item} className={Css.listViewTile()} />
+          ? props.resolvedItems.singleShoppingList?.map((resolvedItem) => (
+              <ItemResolvedTile key={resolvedItem.id} item={resolvedItem} className={Css.listViewTile()} />
             ))
-          : props.shoppingList.itemList.map((item) => (
+          : props.shoppingList.singleShoppingList?.map((item) => (
               <Tile
                 key={item.id}
                 item={item}
