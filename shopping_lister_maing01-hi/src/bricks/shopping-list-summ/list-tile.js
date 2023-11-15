@@ -67,7 +67,7 @@ const Tile = createVisualComponent({
     const { elementProps } = Utils.VisualComponent.splitProps(props);
 
     return (
-      <Uu5TilesElements.Tile {...elementProps} headerOverlap onClick={() => handleSelect()}>
+      <Uu5TilesElements.Tile {...elementProps} headerOverlap>
         {({ padding }) => {
           return (
             <>
@@ -84,6 +84,7 @@ const Tile = createVisualComponent({
                   {isUserOwner(props.list?.id) && !props.isArchived && (
                   <Box className={Css.body()}>
                     <div>
+                    <Button icon="mdi-open-in-new" onClick={() => handleSelect()} significance="subdued" />
                     <Button icon="mdi-update" onClick={handleUpdate} significance="subdued" tooltip="Update" />
                     <Button icon="mdi-delete" onClick={handleDelete} significance="subdued" tooltip="Delete" />
                     </div>
