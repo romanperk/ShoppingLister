@@ -14,9 +14,9 @@ const Css = {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      height: 25,
+      height: 30,
       marginTop: 20,
-      paddingLeft: 30,
+      paddingLeft: 10,
       paddingRight: 0,
     })
 }
@@ -47,15 +47,15 @@ const Tile = createVisualComponent({
     const [route, setRoute] = useRoute();
     //@@viewOn:private
     function handleDelete(event) {
-      props.onDelete(new Utils.Event(props.list, event));
+      props.onDelete(new Utils.Event(props.data, event));
     }
 
     function handleUpdate(event) {
-      props.onUpdate(new Utils.Event(props.list, event));
+      props.onUpdate(new Utils.Event(props.data, event));
     }
 
     function handleSelect() {
-      props.selectList(props.list.id);
+      props.selectList(props.data.id);
       setRoute("shoppingListDetail");
     };
     //@@viewOff:private
@@ -65,7 +65,7 @@ const Tile = createVisualComponent({
 
     //@@viewOn:render
     const { elementProps } = Utils.VisualComponent.splitProps(props);
-
+    
     return (
       <Uu5TilesElements.Tile {...elementProps} headerOverlap>
         {({ padding }) => {
@@ -79,12 +79,12 @@ const Tile = createVisualComponent({
                   paddingLeft: 25,
                 })}
               >
-                <div>
-                  <strong>{props.list.listName}</strong>
-                  {isUserOwner(props.list?.id) && !props.isArchived && (
+                <div style={{ textAlign: 'center' }}>
+                  <strong>{props.data.listName}</strong>
+                  {isUserOwner(props.data?.id) && !props.isArchived && (
                   <Box className={Css.body()}>
                     <div>
-                    <Button icon="mdi-open-in-new" onClick={() => handleSelect()} significance="subdued" />
+                    <Button icon="mdi-open-in-new" onClick={handleSelect} significance="subdued" />
                     <Button icon="mdi-update" onClick={handleUpdate} significance="subdued" tooltip="Update" />
                     <Button icon="mdi-delete" onClick={handleDelete} significance="subdued" tooltip="Delete" />
                     </div>

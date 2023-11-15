@@ -41,9 +41,7 @@ let ListsView = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
-    const [filterList, setFilterList] = useState([]);
     const [sorterList, setSorterList] = useState([]);
-    const [modalProps, setModalProps] = useState();
     const { currentListId, selectList, getArchivedLists, getActiveLists } = useJokes();
     const { addAlert } = useAlertBus();
     const activeList = getActiveLists();
@@ -105,7 +103,7 @@ let ListsView = createVisualComponent({
     //@@viewOff:interface
 
     //@@viewOn:render
-    const listsToDisplay = showArchived ? archivedList : activeList;
+    const listsToDisplay = showArchived ? [archivedList] : [activeList];
     const attrs = Utils.VisualComponent.getAttrs(props);
     const { remove, update, create } = useJokes();
     return (
@@ -115,9 +113,8 @@ let ListsView = createVisualComponent({
         {listsToDisplay.map((list) => (
           <Uu5Tiles.ControllerProvider
             key={list.id}
-            list={list}
+            data={list}
             selectList={selectList}
-            onUpdate={handleUpdate}
             selected={list.id === currentListId}
             onDelete={handleDelete}
             isArchived={showArchived}
@@ -130,7 +127,8 @@ let ListsView = createVisualComponent({
             <Uu5TilesControls.SearchButton />
             <Uu5TilesControls.SorterBar />
             <Uu5TilesControls.Counter />
-            <Uu5TilesElements.Grid tileMinWidth={100} tileMaxWidth={200} onDelete={remove} onUpdate={update}>
+            <Uu5TilesElements.Grid tileMinWidth={100} tileMaxWidth={200} onDelete={remove} 
+            onUpdate={handleUpdate}>
               {Tile}
             </Uu5TilesElements.Grid>
           </Uu5Tiles.ControllerProvider>
