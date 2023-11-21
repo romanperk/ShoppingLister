@@ -55,7 +55,7 @@ const Tile = createVisualComponent({
     }
 
     function handleSelect() {
-      props.selectList(props.data.id);
+      props.selectlist(props.data.id);
       setRoute("shoppingListDetail");
     };
     //@@viewOff:private
@@ -81,15 +81,18 @@ const Tile = createVisualComponent({
               >
                 <div style={{ textAlign: 'center' }}>
                   <strong>{props.data.listName}</strong>
-                  {isUserOwner(props.data?.id) && !props.isArchived && (
                   <Box className={Css.body()}>
                     <div>
-                    <Button icon="mdi-open-in-new" onClick={handleSelect} significance="subdued" />
-                    <Button icon="mdi-update" onClick={handleUpdate} significance="subdued" tooltip="Update" />
-                    <Button icon="mdi-delete" onClick={handleDelete} significance="subdued" tooltip="Delete" />
+                      <Button icon="mdi-open-in-new" significance="subdued" colorScheme="primary" onClick={handleSelect} />
+                      <Button icon="mdi-update" significance="subdued" colorScheme="warning" onClick={handleUpdate} tooltip="Update" />
+                  {isUserOwner(props.data?.id) && !props.isArchived && (
+                    <>
+                      <Button icon="mdi-delete" significance="subdued" colorScheme="red" onClick={handleDelete} tooltip="Delete" />
+                    </>
+                    )}
                     </div>
                   </Box>
-                   )}
+
                 </div>
               </div>
             </>

@@ -21,6 +21,14 @@ const SORTER_LIST = [
 //@@viewOff:constants
 
 //@@viewOn:css
+const Css = {
+  counter: () =>
+    Config.Css.css({
+      height: 30,
+      marginBottom: 10,
+      paddingLeft: 15
+    })
+}
 //@@viewOff:css
 
 //@@viewOn:helpers
@@ -42,7 +50,7 @@ let ListsView = createVisualComponent({
   render(props) {
     //@@viewOn:private
     const [sorterList, setSorterList] = useState([]);
-    const { currentListId, selectList, getArchivedLists, getActiveLists } = useJokes();
+    const { currentListId, selectlist, getArchivedLists, getActiveLists } = useJokes();
     const { addAlert } = useAlertBus();
     const activeList = getActiveLists();
     const archivedList = getArchivedLists();
@@ -93,7 +101,7 @@ let ListsView = createVisualComponent({
           durationMs: 2000,
         });
       } catch (error) {
-        ListView.logger.error("Error archiving list", error);
+        ListsView.logger.error("Error archiving list", error);
         showError(error, "List archive failed!");
       }
     }
@@ -108,32 +116,32 @@ let ListsView = createVisualComponent({
     const { remove, update, create } = useJokes();
     return (
       <div {...attrs}>
-        <div className={Config.Css.css({ padding: "16px 32px" })}>
-        <ArchivedButton onClick={() => setShowArchived(!showArchived)} />
-        {listsToDisplay.map((list) => (
+        {listsToDisplay.map((list) => ( console.log(list),
+        <div className={Config.Css.css({ padding: "16px 32px" })} key={list.id} 
+        selectlist={selectlist}
+        selected={list.id === currentListId}
+        onDelete={handleDelete}>
+        <ArchivedButton significance="subdued" colorScheme="primary" onClick={() => setShowArchived(!showArchived)} />
+      
           <Uu5Tiles.ControllerProvider
-            key={list.id}
             data={list}
-            selectList={selectList}
-            selected={list.id === currentListId}
-            onDelete={handleDelete}
-            isArchived={showArchived}
             sorterDefinitionList={SORTER_LIST}
             sorterList={sorterList}
             onSorterChange={onSorterChange}
           >
             <ModalOnButton header="Vytvořit seznam" />
-            <Uu5TilesControls.SorterButton />
-            <Uu5TilesControls.SearchButton />
+            <Uu5TilesControls.SorterButton significance="subdued" />
+            <Uu5TilesControls.SearchButton significance="subdued" />
             <Uu5TilesControls.SorterBar />
-            <Uu5TilesControls.Counter />
-            <Uu5TilesElements.Grid tileMinWidth={100} tileMaxWidth={200} onDelete={remove} 
-            onUpdate={handleUpdate}>
+            <Uu5TilesControls.Counter className={Css.counter()} />
+            <Uu5TilesElements.Grid tileMinWidth={100} tileMaxWidth={200} onDelete={handleDelete} 
+            onUpdate={handleUpdate} key={list.id}>
               {Tile}
             </Uu5TilesElements.Grid>
           </Uu5Tiles.ControllerProvider>
-           ))}
+      
         </div>
+             ))}
       </div>
     );
     //@@viewOff:render

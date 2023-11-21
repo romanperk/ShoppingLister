@@ -37,7 +37,7 @@ const initialLists = [
     id: "123456111222",
     listName: "Týdenní nákup",
     archived: false,
-    owner: "9646-1913-5034-0000",
+    owner: "9646-1913-5034-000",
     userList: [
       { id: Utils.String.generateId(), name: "Daniel" },
       { id: Utils.String.generateId(), name: "Jan" },
@@ -88,6 +88,87 @@ const initialLists = [
         resolved: true,
       },
     ],
+  },{
+    id: "1234512126",
+    listName: "Velikonoční nákup",
+    archived: false,
+    owner: "9646-1913-5034-0000",
+    userList: [
+      { id: Utils.String.generateId(), name: "Roman" },
+      { id: Utils.String.generateId(), name: "Vendula" },
+      { id: Utils.String.generateId(), name: "Oliver" },
+    ],
+    singleShoppingList: [
+      {
+        id: Utils.String.generateId(),
+        name: "Mouka",
+        resolved: false,
+      },
+      {
+        id: Utils.String.generateId(),
+        name: "Marmeláda",
+        resolved: false,
+      },
+      {
+        id: Utils.String.generateId(),
+        name: "Veka",
+        resolved: true,
+      },
+    ],
+  },{
+    id: "123451216",
+    listName: "Nákup na Mikuláše",
+    archived: false,
+    owner: "9646-1913-5034-0000",
+    userList: [
+      { id: Utils.String.generateId(), name: "Roman" },
+      { id: Utils.String.generateId(), name: "Vendula" },
+      { id: Utils.String.generateId(), name: "Oliver" },
+    ],
+    singleShoppingList: [
+      {
+        id: Utils.String.generateId(),
+        name: "Mouka",
+        resolved: false,
+      },
+      {
+        id: Utils.String.generateId(),
+        name: "Marmeláda",
+        resolved: false,
+      },
+      {
+        id: Utils.String.generateId(),
+        name: "Veka",
+        resolved: true,
+      },
+    ],
+  },{
+    id: "15121216",
+    listName: "Vánoční nákup",
+    archived: true,
+    owner: "9646-1913-5034-0000",
+    userList: [
+      { id: Utils.String.generateId(), name: "Roman" },
+      { id: Utils.String.generateId(), name: "Vendula" },
+      { id: Utils.String.generateId(), name: "Oliver" },
+    ],
+    singleShoppingList: [
+      {
+        id: Utils.String.generateId(),
+        name: "Mouka",
+        resolved: false,
+      },
+      {
+        id: Utils.String.generateId(),
+        name: "Marmeláda",
+        resolved: false,
+      },
+      {
+        id: Utils.String.generateId(),
+        name: "Veka",
+        resolved: true,
+      },
+    ],
   },
 ];
 
@@ -109,13 +190,12 @@ const ListProvider = createComponent({
     const [lists, setLists] = useState(initialLists); // State to manage multiple lists
     const [currentListId, setCurrentListId] = useState(initialLists[0]?.id); // Initialize with the ID of the first list
     const [showResolved, setShowResolved] = useState(false);
+    const { identity } = useSession();
     // Function to change the currently selected list
     function selectList(listId) {
       setCurrentListId(listId);
     }
 
-
-        const { identity } = useSession();
     function isUserOwner(listId) {
       const list = lists.find((list) => list.id === listId);
       return identity?.uuIdentity === list?.owner;

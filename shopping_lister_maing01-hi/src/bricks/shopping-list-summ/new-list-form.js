@@ -29,12 +29,12 @@ const NewListForm = createVisualComponent({
     const [open, setOpen] = useState();
 
     return (
-      <Form {...elementProps} onSubmit={props.onSubmit}>
+      <Form {...elementProps} onSubmit={props.onSubmit}  open={open} >
         <FormText name="name" label="Název nákupního seznamu" required />
         <FormText name="owner" label="ID vlastníka" required />
         <FormText name="ownerName" label="Jméno vlastníka" required />
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", paddingTop: 8 }}>
-          <SubmitButton>Vytvořit seznam</SubmitButton>
+          <SubmitButton  onClick={() => setOpen(false) }>Vytvořit seznam</SubmitButton>
         </div>
       </Form>
     );
