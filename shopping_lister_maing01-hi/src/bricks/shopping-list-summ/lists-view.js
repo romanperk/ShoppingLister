@@ -1,40 +1,69 @@
 //@@viewOn:imports
-import { Utils, createVisualComponent, useState } from "uu5g05";
-import Uu5Tiles from "uu5tilesg02";
-import Uu5TilesControls from "uu5tilesg02-controls";
-import Uu5TilesElements from "uu5tilesg02-elements";
-import Tile from "./list-tile.js";
-import ModalOnButton from "./new-list-modal.js";
+import { createVisualComponent, Utils, Content } from "uu5g05";
 import Config from "./config/config.js";
-import { useJokes } from "../list-context.js";
 import { useAlertBus, Button } from "uu5g05-elements";
+import ListTile from "./list-tile.js";
+import { useJokes } from "../list-context.js";
+import { useState } from "uu5g05";
+import ModalOnButton from "./new-list-modal";
 //@@viewOff:imports
 
 //@@viewOn:constants
-const SORTER_LIST = [
-  {
-    key: "listName",
-    label: "Název",
-    sort: (a, b) => a.listName.localeCompare(b.listName),
-  },
-];
 //@@viewOff:constants
 
 //@@viewOn:css
 const Css = {
-  counter: () =>
-    Config.Css.css({
-      height: 30,
-      marginBottom: 10,
-      paddingLeft: 15
-    })
-}
+  main: () => Config.Css.css`
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: grid;
+
+    .toggle-button {
+      background-color: #f0f0f0;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+
+    .list-tile {
+      margin-bottom: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tile {
+      display: grid;
+      flex-direction: row;
+      align-items: center;
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .buttons {
+      display: flex;
+      margin-bottom: 10px;
+      justify-content: center;
+      flexDirection: column;
+      gap: 10;
+      @media (min-width: 768px): {
+        flexDirection: row;
+      }
+    }
+  `,
+};
 //@@viewOff:css
 
 //@@viewOn:helpers
 //@@viewOff:helpers
 
-let ListsView = createVisualComponent({
+const ListsView = createVisualComponent({
   //@@viewOn:statics
   uu5Tag: Config.TAG + "ListsView",
   //@@viewOff:statics
@@ -49,15 +78,18 @@ let ListsView = createVisualComponent({
 
   render(props) {
     //@@viewOn:private
-    const [sorterList, setSorterList] = useState([]);
-    const { currentListId, selectlist, getArchivedLists, getActiveLists } = useJokes();
+    const { currentListId, selectList, getArchivedLists, getActiveLists } = useJokes();
     const { addAlert } = useAlertBus();
     const activeList = getActiveLists();
     const archivedList = getArchivedLists();
     const [showArchived, setShowArchived] = useState(false);
 
-    function onSorterChange(e) {
-      setSorterList(e.data.sorterList);
+    function showError(error, header = "") {
+      addAlert({
+        header,
+        message: error.message,
+        priority: "error",
+      });
     }
 
     function ArchivedButton(props) {
@@ -66,14 +98,6 @@ let ListsView = createVisualComponent({
           {showArchived ? "Zobrazit aktivní seznamy" : "Zobrazit archivované seznamy"}
         </Button>
       );
-    }
-
-    function showError(error, header = "") {
-      addAlert({
-        header,
-        message: error.message,
-        priority: "error",
-      });
     }
 
     function handleDelete(event) {
@@ -91,6 +115,7 @@ let ListsView = createVisualComponent({
       }
     }
     
+
     function handleUpdate(event) {
       const list = event.data;
       try {
@@ -101,7 +126,7 @@ let ListsView = createVisualComponent({
           durationMs: 2000,
         });
       } catch (error) {
-        ListsView.logger.error("Error archiving list", error);
+        ListView.logger.error("Error archiving list", error);
         showError(error, "List archive failed!");
       }
     }
@@ -111,37 +136,28 @@ let ListsView = createVisualComponent({
     //@@viewOff:interface
 
     //@@viewOn:render
-    const listsToDisplay = showArchived ? [archivedList] : [activeList];
-    const attrs = Utils.VisualComponent.getAttrs(props);
-    const { remove, update, create } = useJokes();
+    const attrs = Utils.VisualComponent.getAttrs(props, Css.main());
+    const listsToDisplay = showArchived ? archivedList : activeList;
+    const { create } = useJokes();
     return (
       <div {...attrs}>
-        {listsToDisplay.map((list) => ( console.log(list),
-        <div className={Config.Css.css({ padding: "16px 32px" })} key={list.id} 
-        selectlist={selectlist}
-        selected={list.id === currentListId}
-        onDelete={handleDelete}>
-        <ArchivedButton significance="subdued" colorScheme="primary" onClick={() => setShowArchived(!showArchived)} />
-      
-          <Uu5Tiles.ControllerProvider
-            data={list}
-            sorterDefinitionList={SORTER_LIST}
-            sorterList={sorterList}
-            onSorterChange={onSorterChange}
-          >
-            <ModalOnButton header="Vytvořit seznam" />
-            <Uu5TilesControls.SorterButton significance="subdued" />
-            <Uu5TilesControls.SearchButton significance="subdued" />
-            <Uu5TilesControls.SorterBar />
-            <Uu5TilesControls.Counter className={Css.counter()} />
-            <Uu5TilesElements.Grid tileMinWidth={100} tileMaxWidth={200} onDelete={handleDelete} 
-            onUpdate={handleUpdate} key={list.id}>
-              {Tile}
-            </Uu5TilesElements.Grid>
-          </Uu5Tiles.ControllerProvider>
-      
+        <div className="buttons">
+          <ArchivedButton significance="subdued" colorScheme="primary" onClick={() => setShowArchived(!showArchived)} />
+          <ModalOnButton header="Vytvořit seznam" onCreate={create}/>
         </div>
-             ))}
+        {listsToDisplay.map((list) => (
+          <div className="list-tile">
+            <ListTile
+              key={list.id}
+              list={list}
+              selectList={selectList}
+              onUpdate={handleUpdate}
+              selected={list.id === currentListId}
+              onDelete={handleDelete}
+              isArchived={showArchived}
+            />
+          </div>
+        ))}
       </div>
     );
     //@@viewOff:render

@@ -3,7 +3,6 @@ import React from "react";
 import { createVisualComponent, PropTypes, Utils, useRoute  } from "uu5g05";
 import { Config } from "uu5g05-dev";
 import { Button, Box } from "uu5g05-elements";
-import Uu5TilesElements from "uu5tilesg02-elements";
 import { useJokes } from "../list-context.js";
 //@@viewOff:imports
 
@@ -16,7 +15,7 @@ const Css = {
       justifyContent: "space-between",
       height: 30,
       marginTop: 20,
-      paddingLeft: 10,
+      paddingLeft: 8,
       paddingRight: 0,
     })
 }
@@ -47,15 +46,15 @@ const Tile = createVisualComponent({
     const [route, setRoute] = useRoute();
     //@@viewOn:private
     function handleDelete(event) {
-      props.onDelete(new Utils.Event(props.data, event));
+      props.onDelete(new Utils.Event(props.list, event));
     }
 
     function handleUpdate(event) {
-      props.onUpdate(new Utils.Event(props.data, event));
+      props.onUpdate(new Utils.Event(props.list, event));
     }
 
     function handleSelect() {
-      props.selectlist(props.data.id);
+      props.selectlist(props.list.id);
       setRoute("shoppingListDetail");
     };
     //@@viewOff:private
@@ -67,9 +66,7 @@ const Tile = createVisualComponent({
     const { elementProps } = Utils.VisualComponent.splitProps(props);
     
     return (
-      <Uu5TilesElements.Tile {...elementProps} headerOverlap>
-        {({ padding }) => {
-          return (
+      < Box {...elementProps}>
             <>
               <div
                 className={Config.Css.css({
@@ -80,14 +77,14 @@ const Tile = createVisualComponent({
                 })}
               >
                 <div style={{ textAlign: 'center' }}>
-                  <strong>{props.data.listName}</strong>
+                  <strong>{props.list.listName}</strong>
                   <Box className={Css.body()}>
                     <div>
-                      <Button icon="mdi-open-in-new" significance="subdued" colorScheme="primary" onClick={handleSelect} />
-                      <Button icon="mdi-update" significance="subdued" colorScheme="warning" onClick={handleUpdate} tooltip="Update" />
-                  {isUserOwner(props.data?.id) && !props.isArchived && (
+                      <Button icon="mdi-open-in-new" significance="subdued" colorScheme="primary" onClick={() => handleSelect()} tooltip="Zobrazit" />
+                      <Button icon="mdi-update" significance="subdued" colorScheme="warning" onClick={handleUpdate} tooltip="Archivovat" />
+                  {isUserOwner(props.list?.id) && !props.isArchived && (
                     <>
-                      <Button icon="mdi-delete" significance="subdued" colorScheme="red" onClick={handleDelete} tooltip="Delete" />
+                      <Button icon="mdi-delete" significance="subdued" colorScheme="red" onClick={handleDelete} tooltip="Vymazat" />
                     </>
                     )}
                     </div>
@@ -96,9 +93,7 @@ const Tile = createVisualComponent({
                 </div>
               </div>
             </>
-          );
-        }}
-      </Uu5TilesElements.Tile>
+      </Box>
     );
     //@@viewOff:render
   },

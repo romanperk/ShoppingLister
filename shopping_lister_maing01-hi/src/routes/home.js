@@ -12,6 +12,25 @@ import RouteBar from "../core/route-bar.js";
 //@@viewOff:constants
 
 //@@viewOn:css
+const Css = {
+  main: () => Config.Css.css`
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    
+    .create-list-view {
+      margin-bottom: 24px;
+      padding: 16px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .lists-view {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+  `,
+};
 //@@viewOff:css
 
 //@@viewOn:helpers
@@ -40,13 +59,15 @@ let Home = createVisualComponent({
 
     //@@viewOn:render
     return (
-      <div>
+      <>
         <RouteBar />
-        <div style={{ textAlign: 'center' }}>
-          <h1>Přehled nákupních seznamů</h1>
+        <h1 style={{ textAlign: 'center' }}>Přehled nákupních seznamů</h1>
+        <div className={Css.main()}>  
+          <div>
+            <ListsView onDelete={remove} onUpdate={update} onCreate={create} />
+          </div>
         </div>
-        <ListsView onDelete={remove} onUpdate={update} onCreate={create} />
-      </div>
+      </>
     );
     //@@viewOff:render
   },
